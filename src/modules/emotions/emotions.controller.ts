@@ -53,7 +53,7 @@ export class EmotionsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.emotionsService.remove(id);
+  delete(@Param('id') id: string) {
+    return this.emotionsService.delete(id);
   }
 }

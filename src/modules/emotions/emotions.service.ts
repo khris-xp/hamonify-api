@@ -24,16 +24,14 @@ export class EmotionsService {
 	})
 	console.log(return_emotions);
 	return (return_emotions);
-	// return `This action returns all emotions`;
   }
 
 
   update(id: string, updateEmotionDto: UpdateEmotionDto) {
-	return (this.emotionRepository.findByIdAndUpdate(id, updateEmotionDto))
-	// return `This action updates a #${id} emotion`;
+	return (this.emotionRepository.findByIdAndUpdate(id, updateEmotionDto));
   }
 
-  remove(id: string) {
-	return `This action removes a #${id} emotion`;
+  delete(id: string) {
+	return (this.emotionRepository.findByIdAndDelete(id));
   }
 }
