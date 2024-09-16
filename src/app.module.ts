@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { configuration } from './config';
 import { AuthModule } from './modules/auth/auth.module';
+import { BlogModule } from './modules/blog/blog.module';
 import { UsersModule } from './modules/users/users.module';
 import { GLOBAL_CONFIG } from './shared/constants/global-config';
 
@@ -23,6 +24,7 @@ import { GLOBAL_CONFIG } from './shared/constants/global-config';
     }),
     UsersModule,
     AuthModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

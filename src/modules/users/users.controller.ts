@@ -7,8 +7,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { CurrentUser, ObjectId } from '../../common/decorators';
-import { JwtAccessGuard } from '../../common/guards';
+import { CurrentUser, ObjectId } from 'src/common/decorators';
+import { JwtAccessGuard } from 'src/common/guards';
 
 import { UpdateUserDto, UserResponse } from './dtos';
 import { ChangePasswordDto } from './dtos/change-password.dto';
