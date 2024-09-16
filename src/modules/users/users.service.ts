@@ -10,7 +10,7 @@ import {
   hashBcrypt,
   hashSha256,
   verifySha256,
-} from '../../shared/utils';
+} from 'src/shared/utils';
 
 import { ChangePasswordDto, CreateUserDto, UpdateUserDto } from './dtos';
 import { UserDocument } from './schemas';
