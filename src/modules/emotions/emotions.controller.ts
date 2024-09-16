@@ -59,6 +59,8 @@ export class EmotionsController {
 
   @Get('playlist')
   get_playlist(){
-	return this.emotionsService.get_playlist();
+	const data = this.emotionsService.get_playlist();
+	console.log(data);
+	return (data);
   }
 }

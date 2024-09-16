@@ -11,7 +11,6 @@ export class EmotionsService {
 	constructor(private readonly emotionRepository: EmotionRepository) {}
   	async createEmotion(createEmotionDto: CreateEmotionDto): Promise<Emotion> {
 		return (this.emotionRepository.create(createEmotionDto));
-	// return 'This action adds a new emotion';
 	}
 
 	async findAll(userId: string): Promise<Emotion[]> {
@@ -36,7 +35,7 @@ export class EmotionsService {
 	return (this.emotionRepository.findByIdAndDelete(id));
   }
 
-  get_playlist(){
+  async get_playlist(): Promise<any>{
 		require('dotenv').config();
 		const axios = require('axios');
 		const qs = require('qs'); // For encoding data as x-www-form-urlencoded
@@ -55,8 +54,20 @@ export class EmotionsService {
 		)
 		.then(response => {
 		console.log('Access Token:', response.data.access_token);
-			// do something else
-		})
+			axios.get('https://api.spotify.com/v1/search?q=sad&type=playlist', {
+				headers: {
+				'Authorization': `Bearer ${response.data.access_token}`
+				}
+			})
+			.then(response => {
+				// console.log(response.data);
+				return (response.data);
+				// console.log(response.data.items)
+			})
+			.catch(error => {
+				console.error('Error fetching categories:', error);
+			});
+			})
 		.catch(error => {
 		console.error('Error:', error.response ? error.response.data : error.message);
 		});
