@@ -10,9 +10,9 @@ import {
 import { CurrentUser, ObjectId } from 'src/common/decorators';
 import { JwtAccessGuard } from 'src/common/guards';
 
-import { CreateBlogDto, UpdateBlogDto } from '../users/dtos';
 import { BlogResponse } from '../users/dtos/blog-response.dto';
 import { BlogService } from './blog.service';
+import { CreateBlogDto, UpdateBlogDto } from './dtos';
 import { BlogDocument } from './schemas';
 
 @ApiTags('Blog')
@@ -49,6 +49,7 @@ export class BlogController {
   getAllBlogs(): Promise<BlogDocument[]> {
     return this.blogService.getAllBlogs();
   }
+
   @Get(':blogId')
   @ApiOperation({
     summary: 'Get blog by id',
