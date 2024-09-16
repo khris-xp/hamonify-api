@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { configuration } from './config';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 import { GLOBAL_CONFIG } from './shared/constants/global-config';
 
 @Module({
@@ -19,6 +21,8 @@ import { GLOBAL_CONFIG } from './shared/constants/global-config';
       }),
       inject: [ConfigService],
     }),
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

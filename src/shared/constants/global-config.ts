@@ -13,3 +13,8 @@ export const GLOBAL_CONFIG = {
   CLOUDINARY_API_SECRET: 'CLOUDINARY_API_SECRET',
   MOCK_USER_ID: 'MOCK_USER_ID',
 };
+
+export const AVATAR_IMAGE =
+  'https://avatars.githubusercontent.com/u/56169832?v=4';
+
+export const COVER_IMAGE = 'https://picsum.photos/2000/300';
