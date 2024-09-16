@@ -56,4 +56,9 @@ export class EmotionsController {
   delete(@Param('id') id: string) {
     return this.emotionsService.delete(id);
   }
+
+  @Get('playlist')
+  get_playlist(){
+	return this.emotionsService.get_playlist();
+  }
 }

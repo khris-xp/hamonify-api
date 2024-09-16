@@ -5,6 +5,7 @@ import { CreateEmotionDto } from './dto/create-emotion.dto';
 import { UpdateEmotionDto } from './dto/update-emotion.dto';
 import { Emotion, EmotionDocument } from './schema/emotions.schema'
 import { EmotionRepository } from './emotions.repository'
+import axios from 'axios';
 @Injectable()
 export class EmotionsService {
 	constructor(private readonly emotionRepository: EmotionRepository) {}
@@ -33,5 +34,31 @@ export class EmotionsService {
 
   delete(id: string) {
 	return (this.emotionRepository.findByIdAndDelete(id));
+  }
+
+  get_playlist(){
+		require('dotenv').config();
+		const axios = require('axios');
+		const qs = require('qs'); // For encoding data as x-www-form-urlencoded
+		const clientId = process.env.SPOTIFY_UID;
+		const clientSecret = process.env.SPOTIFY_SECRET;
+		const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+
+		axios.post('https://accounts.spotify.com/api/token', 
+		qs.stringify({ grant_type: 'client_credentials' }), // data to be sent
+		{ 
+			headers: {
+			'Authorization': `Basic ${auth}`,
+			'Content-Type': 'application/x-www-form-urlencoded'
+			}
+		}
+		)
+		.then(response => {
+		console.log('Access Token:', response.data.access_token);
+			// do something else
+		})
+		.catch(error => {
+		console.error('Error:', error.response ? error.response.data : error.message);
+		});
   }
 }
