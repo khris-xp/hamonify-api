@@ -19,10 +19,10 @@ export class EmotionsController {
 
   @Post()
   @ApiOperation({
-    summary: 'Create blog',
+    summary: 'Create Emotion',
   })
   @ApiOkResponse({
-    description: 'Create blog successfully',
+    description: 'Create Emotion successfully',
     // type: BlogResponse,
   })
   @ApiBearerAuth()
@@ -33,14 +33,19 @@ export class EmotionsController {
   }
 
   @Get()
-  findAll() {
-    return this.emotionsService.findAll();
+  @ApiOperation({
+    summary: 'Get Emotions',
+  })
+  @ApiOkResponse({
+    description: 'Get Emotions successfully',
+    // type: BlogResponse,
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAccessGuard)
+  findAll(@CurrentUser('_id') userId: string) {
+    return this.emotionsService.findAll(userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.emotionsService.findOne(id);
-  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEmotionDto: UpdateEmotionDto) {

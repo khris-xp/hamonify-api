@@ -13,16 +13,24 @@ export class EmotionsService {
 	// return 'This action adds a new emotion';
 	}
 
-  findAll() {
-	return `This action returns all emotions`;
+	async findAll(userId: string): Promise<Emotion[]> {
+	const emotions = await this.emotionRepository.findAll();
+	let return_emotions = [];
+	console.log(userId);
+	emotions.forEach(emotion => {
+		if (emotion.createdBy == userId){
+			return_emotions.push(emotion);
+		}
+	})
+	console.log(return_emotions);
+	return (return_emotions);
+	// return `This action returns all emotions`;
   }
 
-  findOne(id: string) {
-	return `This action returns a #${id} emotion`;
-  }
 
   update(id: string, updateEmotionDto: UpdateEmotionDto) {
-	return `This action updates a #${id} emotion`;
+	return (this.emotionRepository.findByIdAndUpdate(id, updateEmotionDto))
+	// return `This action updates a #${id} emotion`;
   }
 
   remove(id: string) {
