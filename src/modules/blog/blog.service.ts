@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBlogDto, UpdateBlogDto } from '../users/dtos';
+import { CreateBlogDto, UpdateBlogDto } from './dtos';
 
 import { BlogDocument } from './schemas';
 
