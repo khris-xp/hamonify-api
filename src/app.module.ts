@@ -7,6 +7,7 @@ import { configuration } from './config';
 import { AuthModule } from './modules/auth/auth.module';
 import { BlogModule } from './modules/blog/blog.module';
 import { UsersModule } from './modules/users/users.module';
+import { EmotionsModule } from './modules/emotions/emotions.module'
 import { GLOBAL_CONFIG } from './shared/constants/global-config';
 
 @Module({
@@ -25,6 +26,7 @@ import { GLOBAL_CONFIG } from './shared/constants/global-config';
     UsersModule,
     AuthModule,
     BlogModule,
+	EmotionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
