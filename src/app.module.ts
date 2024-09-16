@@ -7,8 +7,8 @@ import { configuration } from './config';
 import { AuthModule } from './modules/auth/auth.module';
 import { BlogModule } from './modules/blog/blog.module';
 import { UsersModule } from './modules/users/users.module';
-import { EmotionsModule } from './modules/emotions/emotions.module'
 import { GLOBAL_CONFIG } from './shared/constants/global-config';
+import { EmotionsModule } from './modules/emotions/emotions.module';
 
 @Module({
   imports: [

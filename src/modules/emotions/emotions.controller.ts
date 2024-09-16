@@ -1,18 +1,54 @@
-import { Controller, Get, Post, Body} from '@nestjs/common';
-import { EmotionsService } from './emotions.service'
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+
+import { CurrentUser, ObjectId } from 'src/common/decorators';
+import { JwtAccessGuard } from 'src/common/guards';
+import { EmotionsService } from './emotions.service';
+import { CreateEmotionDto } from './dto/create-emotion.dto';
+import { UpdateEmotionDto } from './dto/update-emotion.dto';
 
 @Controller('emotions')
 export class EmotionsController {
-	constructor(private readonly emotionsService: EmotionsService) {}
-	@Get()
-	getEmotions(){
-		return (this.emotionsService.findAll());
-	}
+  constructor(private readonly emotionsService: EmotionsService) {}
 
-	@Post()
-	addEmotion(@Body() emotion: any){
-		return (this.emotionsService.addEmotion(emotion));
-	}	
+  @Post()
+  @ApiOperation({
+    summary: 'Create blog',
+  })
+  @ApiOkResponse({
+    description: 'Create blog successfully',
+    // type: BlogResponse,
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAccessGuard)
+  create(@CurrentUser('_id') userId: string, @Body() createEmotionDto: CreateEmotionDto) {
+	createEmotionDto.createdBy = userId;
+    return this.emotionsService.createEmotion(createEmotionDto);
+  }
 
+  @Get()
+  findAll() {
+    return this.emotionsService.findAll();
+  }
 
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.emotionsService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateEmotionDto: UpdateEmotionDto) {
+    return this.emotionsService.update(id, updateEmotionDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.emotionsService.remove(id);
+  }
 }

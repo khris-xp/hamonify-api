@@ -1,45 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import {EmotionsRepository} from './emotions.repository'
-import {} from './schemas/emotion.schema'
+import { Model } from 'mongoose'
+import { InjectModel } from '@nestjs/mongoose'
+import { CreateEmotionDto } from './dto/create-emotion.dto';
+import { UpdateEmotionDto } from './dto/update-emotion.dto';
+import { Emotion, EmotionDocument } from './schema/emotions.schema'
+import { EmotionRepository } from './emotions.repository'
 @Injectable()
 export class EmotionsService {
-	private readonly emotions_score_map = {
-		"Happy": 1,
-		"Excited": 0.5,
-		"Guilty": -0.5,
-		"Sad": -1
-	}
-	private readonly emotions = [
-		{id: 1, name: "Happy", score: 0.5},
-		{id: 2, name: "Sad", score: -0.5}
-	]
-	constructor(private readonly emotionsRepository: EmotionsRepository) {}
-
-	findAll(){
-		return this.emotions;
+	constructor(private readonly emotionRepository: EmotionRepository) {}
+  	async createEmotion(createEmotionDto: CreateEmotionDto): Promise<Emotion> {
+		return (this.emotionRepository.create(createEmotionDto));
+	// return 'This action adds a new emotion';
 	}
 
-	createEmotion(){
-		
-	}
+  findAll() {
+	return `This action returns all emotions`;
+  }
 
-	addEmotion(emotion: any){
-		this.emotions.push(emotion);
+  findOne(id: string) {
+	return `This action returns a #${id} emotion`;
+  }
 
-		// get emotion of the day
+  update(id: string, updateEmotionDto: UpdateEmotionDto) {
+	return `This action updates a #${id} emotion`;
+  }
 
-		// sum the score
-
-		// map the score to avrage emotion
-
-		// map average emotion into catalogory
-
-		// 
-		return (emotion);
-	}
-
-	getPlaylistbyPlaylistID(id: string){
-
-	}
-
+  remove(id: string) {
+	return `This action removes a #${id} emotion`;
+  }
 }
