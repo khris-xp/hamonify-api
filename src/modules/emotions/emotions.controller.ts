@@ -17,77 +17,59 @@ import { UpdateEmotionDto } from './dto/update-emotion.dto';
 export class EmotionsController {
   constructor(private readonly emotionsService: EmotionsService) {}
 
-  @Post()
-  @ApiOperation({
-    summary: 'Create Emotion',
-  })
-  @ApiOkResponse({
-    description: 'Create Emotion successfully',
-    // type: BlogResponse,
-  })
-  @ApiBearerAuth()
-  @UseGuards(JwtAccessGuard)
-  create(@CurrentUser('_id') userId: string, @Body() createEmotionDto: CreateEmotionDto) {
-	createEmotionDto.createdBy = userId;
-    return this.emotionsService.createEmotion(createEmotionDto);
-  }
+	@Post()
+	@ApiOperation({ summary: 'Create Emotion' })
+	@ApiOkResponse({ description: 'Create Emotion successfully' })
+	@ApiBearerAuth()
+	@UseGuards(JwtAccessGuard)
+	create(@CurrentUser('_id') userId: string, @Body() createEmotionDto: CreateEmotionDto) {
+		createEmotionDto.createdBy = userId;
+		return this.emotionsService.createEmotion(createEmotionDto);
+	}
 
-  @Get()
-  @ApiOperation({
-    summary: 'Get Emotions',
-  })
-  @ApiOkResponse({
-    description: 'Get Emotions successfully',
-    // type: BlogResponse,
-  })
-  @ApiBearerAuth()
-  @UseGuards(JwtAccessGuard)
-  findAll(@CurrentUser('_id') userId: string) {
-    return this.emotionsService.findAll(userId);
-  }
+	@Get()
+	@ApiOperation({ summary: 'Get Emotions' })
+	@ApiOkResponse({ description: 'Get Emotions successfully' })
+	@ApiBearerAuth()
+	@UseGuards(JwtAccessGuard)
+	findAll(@CurrentUser('_id') userId: string) {
+		return this.emotionsService.findAll(userId);
+	}
 
-  @Get("today")
-  @ApiOperation({
-    summary: 'Get Emotions',
-  })
-  @ApiOkResponse({
-    description: 'Get Emotions successfully',
-  })
-  @ApiBearerAuth()
-  @UseGuards(JwtAccessGuard)
-  todayEmotion(@CurrentUser('_id') userId: string) {
-    return this.emotionsService.getTodayEmotion(userId);
-  }
+	@Get(":date?")
+	@ApiOperation({ summary: 'Get Emotions' })
+	@ApiOkResponse({ description: 'Get Emotions successfully' })
+	@ApiBearerAuth()
+	@UseGuards(JwtAccessGuard)
+	findAllByDate(@CurrentUser('_id') userId: string, @Param('date') date?: string, ) {
+		return this.emotionsService.findAll(userId, new Date(date));
+	}
+
   
-  @Get("avtoday")
-  @ApiOperation({
-    summary: 'Get Average Emotions',
-  })
-  @ApiOkResponse({
-    description: 'Get Average Emotions successfully',
-  })
-  @ApiBearerAuth()
-  @UseGuards(JwtAccessGuard)
-  averageEmotion(@CurrentUser('_id') userId: string) {
-    return this.emotionsService.calculateAverageEmotionToday(userId);
-  }
+	@Get("average/:date")
+	@ApiOperation({ summary: 'Get Average Emotions' })
+	@ApiOkResponse({ description: 'Get Average Emotions successfully' })
+	@ApiBearerAuth()
+	@UseGuards(JwtAccessGuard)
+	averageEmotion(@Param('date') date: string, @CurrentUser('_id') userId: string) {
+		return this.emotionsService.calculateAverageEmotionByDate(userId, new Date(date));
+	}
 
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEmotionDto: UpdateEmotionDto) {
-    return this.emotionsService.update(id, updateEmotionDto);
-  }
-
-  @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.emotionsService.delete(id);
-  }
-
-  @Get('playlist')
-  async get_playlist(@CurrentUser('_id') userId: string){
-	const emotion = await this.averageEmotion(userId);
-	const data = this.emotionsService.getPlaylistByEmotion(emotion.emotion);
-	console.log(data);
-	return (data);
-  }
+	
+	@Get('playlist/:date')
+	async get_playlist(@CurrentUser('_id') userId: string, @Param('date') date: string){
+		const emotion = await this.emotionsService.calculateAverageEmotionByDate(userId, new Date(date));
+		const data = await this.emotionsService.getPlaylistByEmotion(emotion.emotion);
+		return (data);
+	}
+	@Patch(':id')
+	update(@Param('id') id: string, @Body() updateEmotionDto: UpdateEmotionDto) {
+	  return this.emotionsService.update(id, updateEmotionDto);
+	}
+  
+	@Delete(':id')
+	delete(@Param('id') id: string) {
+	  return this.emotionsService.delete(id);
+	}
 }
