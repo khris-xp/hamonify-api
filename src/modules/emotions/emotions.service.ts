@@ -31,7 +31,9 @@ export class EmotionsService {
 	scores = [-1, -0.5, 0, 0.5, 1];
 
   	async createEmotion(createEmotionDto: CreateEmotionDto): Promise<Emotion> {
-		return (this.emotionRepository.create(createEmotionDto));	
+		if ((await this.findAll(createEmotionDto.createdBy, new Date())).length < 3)
+			return (this.emotionRepository.create(createEmotionDto));
+		return (null);
 	}
 
 	async findAll(userId: string, date?: Date): Promise<Emotion[]> {
