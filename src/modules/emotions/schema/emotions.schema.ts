@@ -23,6 +23,11 @@ export class Emotion{
 		required: true,
 	  })
 	createdBy: string;
+
+	@Prop({
+		required: true
+	})
+	period: Date
 }
 
 export const EmotionsSchema = SchemaFactory.createForClass(Emotion);
