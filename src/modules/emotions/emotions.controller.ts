@@ -58,6 +58,19 @@ export class EmotionsController {
   todayEmotion(@CurrentUser('_id') userId: string) {
     return this.emotionsService.getTodayEmotion(userId);
   }
+  
+  @Get("avtoday")
+  @ApiOperation({
+    summary: 'Get Average Emotions',
+  })
+  @ApiOkResponse({
+    description: 'Get Average Emotions successfully',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAccessGuard)
+  averageEmotion(@CurrentUser('_id') userId: string) {
+    return this.emotionsService.calculateAverageEmotionToday(userId);
+  }
 
 
   @Patch(':id')
@@ -71,8 +84,9 @@ export class EmotionsController {
   }
 
   @Get('playlist')
-  get_playlist(){
-	const data = this.emotionsService.get_playlist();
+  async get_playlist(@CurrentUser('_id') userId: string){
+	const emotion = await this.averageEmotion(userId);
+	const data = this.emotionsService.getPlaylistByEmotion(emotion.emotion);
 	console.log(data);
 	return (data);
   }
