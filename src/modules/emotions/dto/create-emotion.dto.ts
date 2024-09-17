@@ -9,4 +9,6 @@ export class CreateEmotionDto {
 	@IsString()
 	@IsNotEmpty()
 	createdBy: string;
+	
+	period: Date;
 }
