@@ -31,7 +31,7 @@ export class EmotionsService {
 	scores = [-1, -0.5, 0, 0.5, 1];
 
   	async createEmotion(createEmotionDto: CreateEmotionDto): Promise<Emotion> {
-		if ((await this.findAll(createEmotionDto.createdBy, new Date())).length < 3)
+		if ((await this.findAll(createEmotionDto.createdBy, new Date())).length < 4)
 			return (this.emotionRepository.create(createEmotionDto));
 		return (null);
 	}
@@ -131,6 +131,8 @@ export class EmotionsService {
 			headers: {
 			  'Authorization': `Bearer ${token.data.access_token}`
 		}});
-		return (api_response.data);
+		const items_size = api_response.data.playlists.items.length;
+		return (api_response.data.playlists.items[Math.floor(Math.random() * items_size)]);
+		
   }
 }
