@@ -6,6 +6,7 @@ import { UpdateEmotionDto } from './dto/update-emotion.dto';
 import { Emotion, EmotionDocument } from './schema/emotions.schema'
 import { EmotionRepository } from './emotions.repository'
 import axios from 'axios';
+
 @Injectable()
 export class EmotionsService {
 	constructor(private readonly emotionRepository: EmotionRepository) {}
@@ -43,7 +44,7 @@ export class EmotionsService {
 		const clientSecret = process.env.SPOTIFY_SECRET;
 		const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
-		axios.post('https://accounts.spotify.com/api/token', 
+		const token = await axios.post('https://accounts.spotify.com/api/token', 
 		qs.stringify({ grant_type: 'client_credentials' }), // data to be sent
 		{ 
 			headers: {
@@ -52,24 +53,11 @@ export class EmotionsService {
 			}
 		}
 		)
-		.then(response => {
-		console.log('Access Token:', response.data.access_token);
-			axios.get('https://api.spotify.com/v1/search?q=sad&type=playlist', {
-				headers: {
-				'Authorization': `Bearer ${response.data.access_token}`
-				}
-			})
-			.then(response => {
-				// console.log(response.data);
-				return (response.data);
-				// console.log(response.data.items)
-			})
-			.catch(error => {
-				console.error('Error fetching categories:', error);
-			});
-			})
-		.catch(error => {
-		console.error('Error:', error.response ? error.response.data : error.message);
-		});
+		const api_response = await axios.get('https://api.spotify.com/v1/browse/categories', {
+			headers: {
+			  'Authorization': `Bearer ${token.data.access_token}`
+		}
+		})
+		return (api_response.data);
   }
 }
