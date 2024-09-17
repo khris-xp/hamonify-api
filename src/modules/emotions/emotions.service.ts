@@ -44,28 +44,26 @@ export class EmotionsService {
 			}
 		});
 		return (return_emotions);
-  }
+	}
 
-  async getTodayEmotion(userId: string): Promise<Emotion[]>{
-	const startOfDay = new Date();
-    startOfDay.setUTCHours(0, 0, 0, 0); // set to 00:00:00.000 UTC
+	async getEmotionByDate(userId: string, date: Date): Promise<Emotion[]>{
+		const startOfDay = date;
+    	startOfDay.setUTCHours(0, 0, 0, 0); // set to 00:00:00.000 UTC
 
-    const endOfDay = new Date();
-    endOfDay.setUTCHours(23, 59, 59, 999); // set to 23:59:59.999 UTC
+		const endOfDay = new Date(date);
+		endOfDay.setUTCHours(23, 59, 59, 999); // set to 23:59:59.999 UTC
+		const filterQuery: FilterQuery<EmotionDocument> = {
+			createdAt: {
+				$gte: startOfDay,
+				$lt: endOfDay,
+			},
+			};
+		return (this.emotionRepository.findAll(filterQuery));	
+	}
 
-    const filterQuery: FilterQuery<EmotionDocument> = {
-      createdAt: {
-        $gte: startOfDay,
-        $lt: endOfDay,
-      },
-    };
-	return (this.emotionRepository.findAll(filterQuery));	
-  }
-
-  async calculateAverageEmotionToday(userId: string){
-	const emotions = await this.getTodayEmotion(userId);
+  async calculateAverageEmotionByDate(userId: string, date:Date){
+	const emotions = await this.getEmotionByDate(userId, date);
 	let score = 0;
-	console.log("int score: ", score)
 	if (emotions.length == 0)
 		return {
 			"message": "You have no logging emotion yet.",
@@ -87,9 +85,7 @@ export class EmotionsService {
 		"message": "Calculate Average Emotion Success",
 		"emotion": emotion
 	}
-
   }
-
 
   update(id: string, updateEmotionDto: UpdateEmotionDto) {
 	return (this.emotionRepository.findByIdAndUpdate(id, updateEmotionDto));
@@ -114,7 +110,9 @@ export class EmotionsService {
 			'Content-Type': 'application/x-www-form-urlencoded'
 			}
 		});
-		const api_response = await axios.get(`https://api.spotify.com/v1/search?q=${emotion}%20mood&type=playlist`, {
+		const limit = 50;
+		const offset = Math.floor(Math.random() * 949)
+		const api_response = await axios.get(`https://api.spotify.com/v1/search?q=${emotion}%20mood&type=playlist&limit=${50}&offset=${offset}`, {
 			headers: {
 			  'Authorization': `Bearer ${token.data.access_token}`
 		}});

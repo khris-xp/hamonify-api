@@ -32,45 +32,26 @@ export class EmotionsController {
     return this.emotionsService.createEmotion(createEmotionDto);
   }
 
-  @Get()
-  @ApiOperation({
-    summary: 'Get Emotions',
-  })
-  @ApiOkResponse({
-    description: 'Get Emotions successfully',
-    // type: BlogResponse,
-  })
-  @ApiBearerAuth()
-  @UseGuards(JwtAccessGuard)
-  findAll(@CurrentUser('_id') userId: string) {
-    return this.emotionsService.findAll(userId);
-  }
+	@Get()
+	@ApiOperation({ summary: 'Get Emotions' })
+	@ApiOkResponse({ description: 'Get Emotions successfully' })
+	@ApiBearerAuth()
+	@UseGuards(JwtAccessGuard)
+	findAll(@CurrentUser('_id') userId: string) {
+		return this.emotionsService.findAll(userId);
+	}
 
-  @Get("today")
-  @ApiOperation({
-    summary: 'Get Emotions',
-  })
-  @ApiOkResponse({
-    description: 'Get Emotions successfully',
-  })
-  @ApiBearerAuth()
-  @UseGuards(JwtAccessGuard)
-  todayEmotion(@CurrentUser('_id') userId: string) {
-    return this.emotionsService.getTodayEmotion(userId);
-  }
   
-  @Get("avtoday")
-  @ApiOperation({
-    summary: 'Get Average Emotions',
-  })
-  @ApiOkResponse({
-    description: 'Get Average Emotions successfully',
-  })
-  @ApiBearerAuth()
-  @UseGuards(JwtAccessGuard)
-  averageEmotion(@CurrentUser('_id') userId: string) {
-    return this.emotionsService.calculateAverageEmotionToday(userId);
-  }
+	@Get(":date")
+	@ApiOperation({ summary: 'Get Average Emotions' })
+	@ApiOkResponse({ description: 'Get Average Emotions successfully' })
+	@ApiBearerAuth()
+	@UseGuards(JwtAccessGuard)
+	averageEmotion(@Param('date') date: string, @CurrentUser('_id') userId: string) {
+		const date_ins = new Date(date);
+		console.log("get average Emotion of ", date_ins);
+		return this.emotionsService.calculateAverageEmotionByDate(userId, date_ins);
+	}
 
 
   @Patch(':id')
@@ -85,9 +66,9 @@ export class EmotionsController {
 
   @Get('playlist')
   async get_playlist(@CurrentUser('_id') userId: string){
-	const emotion = await this.averageEmotion(userId);
-	const data = this.emotionsService.getPlaylistByEmotion(emotion.emotion);
-	console.log(data);
+	const emotion = await this.emotionsService.calculateAverageEmotionByDate(userId, new Date);
+	const data = await this.emotionsService.getPlaylistByEmotion(emotion.emotion);
+	console.log(data.items.length);
 	return (data);
   }
 }
