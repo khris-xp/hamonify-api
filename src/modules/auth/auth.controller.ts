@@ -15,6 +15,7 @@ import { AuthService } from './auth.service';
 import {
   AuthResponse,
   CredentialsResponse,
+  LoginDto,
   LogoutResponse,
   RefreshTokenDto,
   RegisterDto,
@@ -28,6 +29,21 @@ export class AuthController {
     private readonly userService: UsersService,
   ) {}
 
+  @Post('/sign-up')
+  @ApiOperation({
+    summary: 'Sign up user',
+  })
+  @ApiOkResponse({
+    description: 'Sign up successfully',
+    type: AuthResponse,
+  })
+  async signUp(@Body() registerDto: RegisterDto): Promise<AuthResponse> {
+    const userExists = await this.userService.findUserByEmail(
+      registerDto.email,
+    );
+    return this.authService.register(registerDto);
+  }
+
   @Post('/sign-in')
   @ApiOperation({
     summary: 'Sign in user',
@@ -36,20 +52,18 @@ export class AuthController {
     description: 'Sign in successfully',
     type: AuthResponse,
   })
-  async signIn(@Body() registerDto: RegisterDto): Promise<AuthResponse> {
+  async signIn(@Body() loginDto: LoginDto): Promise<AuthResponse> {
     const userExists = await this.userService.findUserByEmail(
-      registerDto.email,
+		loginDto.email,
     );
 
-    if (userExists) {
       return this.authService.login({
-        email: registerDto.email,
-        password: registerDto.password,
+        email: loginDto.email,
+        password: loginDto.password,
       });
-    }
 
-    return this.authService.register(registerDto);
   }
+
 
   @Post('refresh')
   @ApiOperation({

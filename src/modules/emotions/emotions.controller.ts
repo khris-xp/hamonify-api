@@ -46,6 +46,19 @@ export class EmotionsController {
     return this.emotionsService.findAll(userId);
   }
 
+  @Get("today")
+  @ApiOperation({
+    summary: 'Get Emotions',
+  })
+  @ApiOkResponse({
+    description: 'Get Emotions successfully',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAccessGuard)
+  todayEmotion(@CurrentUser('_id') userId: string) {
+    return this.emotionsService.getTodayEmotion(userId);
+  }
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEmotionDto: UpdateEmotionDto) {

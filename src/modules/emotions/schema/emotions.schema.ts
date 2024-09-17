@@ -3,7 +3,10 @@ import { Document } from 'mongoose'
 
 export type EmotionDocument = Emotion & Document
 
-@Schema()
+@Schema({
+	timestamps: true,
+	versionKey: false,
+})
 export class Emotion{
 	@Prop({required: true})
 	name: string;
