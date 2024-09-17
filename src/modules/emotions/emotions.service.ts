@@ -70,7 +70,7 @@ export class EmotionsService {
 			'Content-Type': 'application/x-www-form-urlencoded'
 			}
 		});
-		const api_response = await axios.get('https://api.spotify.com/v1/browse/categories', {
+		const api_response = await axios.get(`https://api.spotify.com/v1/search?q=sad&type=playlist`, {
 			headers: {
 			  'Authorization': `Bearer ${token.data.access_token}`
 		}});
