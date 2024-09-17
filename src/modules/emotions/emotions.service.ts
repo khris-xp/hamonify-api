@@ -34,16 +34,29 @@ export class EmotionsService {
 		return (this.emotionRepository.create(createEmotionDto));	
 	}
 
-	async findAll(userId: string): Promise<Emotion[]> {
-		const emotions = await this.emotionRepository.findAll();
-		let return_emotions = [];
-		console.log(userId);
-		emotions.forEach(emotion => {
-			if (emotion.createdBy == userId){
-				return_emotions.push(emotion);
-			}
-		});
-		return (return_emotions);
+	async findAll(userId: string, date?: Date): Promise<Emotion[]> {
+		if (date) {
+			const startOfDay = date;
+			startOfDay.setUTCHours(0, 0, 0, 0); // set to 00:00:00.000 UTC
+	
+			const endOfDay = new Date(date);
+			endOfDay.setUTCHours(23, 59, 59, 999); // set to 23:59:59.999 UTC
+			const filterQuery: FilterQuery<EmotionDocument> = {
+				createdAt: {
+					$gte: startOfDay,
+					$lt: endOfDay,
+				},
+				createdBy: {
+					$eq: userId
+				}};
+			return (this.emotionRepository.findAll(filterQuery));
+		} else {
+			const filterQuery: FilterQuery<EmotionDocument> = {
+				createdBy: {
+					$eq: userId
+				}};
+			return (this.emotionRepository.findAll(filterQuery));
+		}
 	}
 
 	async getEmotionByDate(userId: string, date: Date): Promise<Emotion[]>{
